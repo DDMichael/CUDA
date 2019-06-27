@@ -21,10 +21,10 @@ The above code showed us how to invoke kernel in our C++ code. We use __global__
 ## Passing parameters
 Here we use simple add function to illustrate how to pass parameters into kernel.
 **cudaMalloc( arg1, arg2):** 
-1. arg1 is **a pointer to the pointer** you want to hold the address of the newly allocated memory. This isidentical behavior to *malloc()*, *void ** return type.
+1. arg1 is **a pointer to the pointer** you want to hold the address of the newly allocated memory. This isidentical behavior to *malloc()*, void pointer return type.
 2. arg2 is the size of allocation you want to make.
 
-
+**Note on use cudaMalloc():** Do not dereference the pointer returned by *cudaMalloc()* from the code executes on the host. Host code may pass the pointer around, perform arithmetic on it, or even cast it to a different type. But you **cannot** use it to read or write from memory
 
 ```C++
 #include <iostream>
@@ -50,4 +50,4 @@ int main(){
 }
 ```
 
-
+Host can **allocate** and **free** memory on the device, but host **cannot modify** that memory. Host can only access memory on device by copy the device pointer back to some memory on host by **cudaMemcpy()** method.
