@@ -37,8 +37,7 @@ int main(){
 	int c;
 	int *dev_c;
 	
-	cudaMalloc( (void**)&dev_c, sizeof(int) );	
-
+	cudaMalloc( (void**)&dev_c, sizeof(int) );// &dev_c(GPU) ---> dev_c(CPU) ---> c(CPU)
 	simpleAdd<<<1, 1>>>(2, 8, dev_c);
 
 	cudaMemcpy( &c, dev_c, sizeof(int), cudaMemcpyDeviceToHost );
