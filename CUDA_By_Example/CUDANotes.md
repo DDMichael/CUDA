@@ -18,3 +18,35 @@ int main( void ){
 ```
 The above code showed us how to invoke kernel in our C++ code. We use __global__ qualifier defined a function that will be processed on the GPU named **helloWorld**. We then call this kernel function inside our main function with only 1 block and 1 thread.
 
+## Passing parameters
+Here we use simple add function to illustrate how to pass parameters into kernel.
+**cudaMalloc( arg1, arg2):** 
+1. arg1 is **a pointer to the pointer** you want to hold the address of the newly allocated memory
+2. arg2 is the size of allocation you want to make.
+
+
+```C++
+#include <iostream>
+
+__global__ void simpleAdd(int a, int b, int *c){
+	*c = a + b;
+}
+
+int main(){
+	int c;
+	int *dev_c;
+	
+	cudaMalloc( (void**)&dev_c, sizeof(int) );	
+
+	simpleAdd<<<1, 1>>>(2, 8, dev_c);
+
+	cudaMemcpy( &c, dev_c, sizeof(int), cudaMemcpyDeviceToHost );
+	
+	cudaFree( dev_c );
+	
+	printf("2 + 8 = %d\n", c);
+	return 0;
+}
+```
+
+
