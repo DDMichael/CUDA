@@ -21,8 +21,9 @@ The above code showed us how to invoke kernel in our C++ code. We use __global__
 ## Passing parameters
 Here we use simple add function to illustrate how to pass parameters into kernel.
 **cudaMalloc( arg1, arg2):** 
-1. arg1 is **a pointer to the pointer** you want to hold the address of the newly allocated memory
+1. arg1 is **a pointer to the pointer** you want to hold the address of the newly allocated memory. This isidentical behavior to *malloc()*, *void ** return type.
 2. arg2 is the size of allocation you want to make.
+
 
 
 ```C++
