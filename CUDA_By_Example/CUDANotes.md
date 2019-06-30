@@ -74,6 +74,12 @@ int main(int argc, char **argv){
 	...	
 }
 ```
+### dim3 for solving problem that use blocks of multi-dimension
+For image processing application and computing function values over a two-dimensional domain such as complex plane are two problems that will be benifit by **two-dimensional** indexing.
+```C++
+dim3 grid(DIM, DIM);
+```
+**dim3** is defined in the *CUDA runtime header file*. The type **dim3** represents a three-dimensional tuple that will be used to specify the size of our launch. If DIM is 256, then the kernel will launch a grid with 256 by 256 blocks, indexed by **blockIdx.x** and **blockIdy.y**.
 
 ### Variable gridDim.x and 2D blockIdx indexing
 ```C++
@@ -90,4 +96,39 @@ __global__ void kernel( unsigned char *ptr ){
 }
 ```
 Here, we declared a grid of blocks to have the same dimensions as the 2D array, so one block for each pair of integers **(x, y)** between (0,0) and (DIM-1, DIM-1)
+```C++
+int offset = x + y * gridDim.x
+```
+### Qualifier __device__
+This qualifier means the device will only run on the device and not on the host.
+Kernel code for julia set
+```C++
+__device__ int julia(int x, int y){
+	const float scale = 1.5;
+	float jx = scale * (float)(DIM/2 - x)/(DIM/2);
+	float jy = scale * (float)(DIM/2 - y)/(DIM/2);
+	
+	cuComplex c(-0.8, 0.156);
+	cuComplex a(jx, jy);
+	
+	if(...){
+		return 0;
+	}
+	...
+	return 1;
+}
+```
+### Main function
+```C++
+#define DIM 256
 
+int main(void){
+	...
+	unsigned char *dev_bitmap;
+	...
+	dim3 grid(DIM, DIM)
+	kernel<<<grid, 1>>>( dev_bitmap );
+	...
+	return 0;	
+}
+```
