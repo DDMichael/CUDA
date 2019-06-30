@@ -50,3 +50,27 @@ int main(){
 ```
 
 Host can **allocate** and **free** memory on the device, but host **cannot modify** that memory. Host can only access memory on device by copy the device pointer back to some memory on host by **cudaMemcpy()** method.
+
+## Variable blockIdx.x
+Use variable **blockIDx.x** will let the GPU know which block is currently running for a piece of code. There is **No need to define the blockIdx** because this is one of the built-in variables that the CUDA runtime defines.
+
+### Why blockIdx.x instead of simple blockIdx
+CUDA C allows programmer define **a group of blocks in two dimensions** For problems with 2D domains, such as matrix math or image processing, it is often convenient to use 2D indexing to avoid annoying translations from liner to rectangular indices.
+
+```C++
+__global__ void add(int *a, int *b, int *c){
+	int tid = blockIdx.x;
+	if (tid < N)
+		c[tid] = a[tid] + b[tid];
+}
+
+#define N 10
+
+int main(int argc, char **argv){
+	int a[N], b[N], c[N];
+	int *dev_a, *dev_b, *dev_c;
+	...
+	add<<<N, 1>>>(dev_a, dev_b, dev_c);
+	...	
+}
+```
