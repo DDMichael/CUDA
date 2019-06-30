@@ -74,3 +74,20 @@ int main(int argc, char **argv){
 	...	
 }
 ```
+
+### Variable gridDim.x and 2D blockIdx indexing
+```C++
+__global__ void kernel( unsigned char *ptr ){
+	int x = blockIdx.x;
+	int y = blockIdx.y;
+	int offset = x + y * gridDim.x;
+	// calculat the value at that position
+	int juliaValue = julia(x, y);
+	ptr[offset*4 + 0] = 255 * juliaValue;
+	ptr[offset*4 + 1] = 0;
+	ptr[offset*4 + 2] = 0;
+	ptr[offset*4 + 3] = 255;
+}
+```
+Here, we declared a grid of blocks to have the same dimensions as the 2D array, so one block for each pair of integers **(x, y)** between (0,0) and (DIM-1, DIM-1)
+
